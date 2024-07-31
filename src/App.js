@@ -1,8 +1,8 @@
-// src/App.js
 import React, { useState } from 'react';
 import FilterForm from './components/FilterForm';
 import FilterList from './components/FilterList';
 import './App.css';
+import './components/FilterDialog.css';
 
 const App = () => {
   const [filters, setFilters] = useState([]);
