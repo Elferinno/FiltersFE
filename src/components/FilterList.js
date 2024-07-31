@@ -20,9 +20,9 @@ const FilterList = () => {
   return (
     <div>
       <h2>Saved Filters</h2>
-      {filters.map((filter, index) => (
+      {filters.map((filter) => (
         <div key={filter.id}>
-          <h3>Filter {index + 1}</h3>
+          <h3>{filter.name}</h3>
           {filter.criteriaList.map((criteria, i) => (
             <p key={i}>{criteria.type} - {criteria.condition} - {criteria.value}</p>
           ))}

@@ -29,9 +29,13 @@
 }
 
 .criteria-item {
-  margin-top: 10px;
-  padding-left: 20px;
-  border-left: 2px solid #eee;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.criteria-item select, .criteria-item input, .criteria-item button {
+  margin-right: 10px;
 }
 
 .filter-form {
