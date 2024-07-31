@@ -1,80 +1,84 @@
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const FilterForm = ({ addFilter }) => {
-  const [name, setName] = useState('');
-  const [criteriaType, setCriteriaType] = useState('Amount');
-  const [condition, setCondition] = useState('');
-  const [value, setValue] = useState('');
-  const [criteriaList, setCriteriaList] = useState([]);
+  const [name, setName] = useState('');  // Add name state
+  const [criteria, setCriteria] = useState([]);
+  const [newCriteria, setNewCriteria] = useState({ type: 'Amount', condition: 'More', value: '' });
 
   const handleAddCriteria = () => {
-    setCriteriaList([
-      ...criteriaList,
-      { type: criteriaType, condition, value }
-    ]);
+    setCriteria([...criteria, newCriteria]);
+    setNewCriteria({ type: 'Amount', condition: 'More', value: '' });
   };
 
-  const handleCreateFilter = async () => {
-    const newFilter = {
-      name,
-      criteriaList
-    };
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('/api/filters', newFilter);
+      const response = await axios.post('http://localhost:8080/api/filters', { name, criteriaList: criteria });
       addFilter(response.data);
-      // Reset form
-      setName('');
-      setCriteriaList([]);
+      setName('');  // Reset name
+      setCriteria([]);
     } catch (error) {
-      console.error('Error creating filter:', error);
+      console.error('There was an error saving the filter!', error);
     }
   };
 
   return (
-    <div className="filter-form">
-      <h3>Add New Filter</h3>
-      <input
-        type="text"
-        placeholder="Filter Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+    <form onSubmit={handleSubmit}>
+      <input 
+        type="text" 
+        placeholder="Filter Name" 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+        required 
       />
-      <div className="criteria-section">
-        <select
-          value={criteriaType}
-          onChange={(e) => setCriteriaType(e.target.value)}
-        >
+      <button type="button" onClick={handleAddCriteria}>+ Add Criteria</button>
+      {criteria.map((c, index) => (
+        <div key={index}>
+          <span>{c.type} - {c.condition} - {c.value}</span>
+        </div>
+      ))}
+      <div>
+        <select value={newCriteria.type} onChange={(e) => setNewCriteria({ ...newCriteria, type: e.target.value })}>
           <option value="Amount">Amount</option>
           <option value="Title">Title</option>
           <option value="Date">Date</option>
         </select>
-        <input
-          type="text"
-          placeholder="Condition"
-          value={condition}
-          onChange={(e) => setCondition(e.target.value)}
-        />
-        {criteriaType === 'Date' ? (
-          <DatePicker
-            selected={new Date(value)}
-            onChange={(date) => setValue(date.toISOString())}
-          />
-        ) : (
-          <input
-            type="text"
-            placeholder="Value"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+        {newCriteria.type === 'Amount' && (
+          <>
+            <select value={newCriteria.condition} onChange={(e) => setNewCriteria({ ...newCriteria, condition: e.target.value })}>
+              <option value="More">More</option>
+              <option value="Less">Less</option>
+              <option value="Equal">Equal</option>
+            </select>
+            <input type="number" value={newCriteria.value} onChange={(e) => setNewCriteria({ ...newCriteria, value: e.target.value })} />
+          </>
         )}
-        <button onClick={handleAddCriteria}>Add Criteria</button>
+        {newCriteria.type === 'Title' && (
+          <>
+            <select value={newCriteria.condition} onChange={(e) => setNewCriteria({ ...newCriteria, condition: e.target.value })}>
+              <option value="Contains">Contains</option>
+              <option value="StartsWith">Starts With</option>
+              <option value="EndsWith">Ends With</option>
+            </select>
+            <input type="text" value={newCriteria.value} onChange={(e) => setNewCriteria({ ...newCriteria, value: e.target.value })} />
+          </>
+        )}
+        {newCriteria.type === 'Date' && (
+          <>
+            <select value={newCriteria.condition} onChange={(e) => setNewCriteria({ ...newCriteria, condition: e.target.value })}>
+              <option value="Before">Before</option>
+              <option value="After">After</option>
+              <option value="On">On</option>
+            </select>
+            <DatePicker selected={newCriteria.value} onChange={(date) => setNewCriteria({ ...newCriteria, value: date })} />
+          </>
+        )}
       </div>
-      <button onClick={handleCreateFilter}>Create Filter</button>
-    </div>
+      <button type="submit">Submit Filter</button>
+    </form>
   );
 };
 

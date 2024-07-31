@@ -1,17 +1,33 @@
-import React from 'react';
-import FilterItem from './FilterItem';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const FilterList = ({ filters }) => {
+const FilterList = () => {
+  const [filters, setFilters] = useState([]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/filters');
+        setFilters(response.data);
+      } catch (error) {
+        console.error('Error fetching filters:', error);
+      }
+    };
+
+    fetchFilters();
+  }, []);
+
   return (
-    <div className="filter-list">
-      <h3>Existing Filters</h3>
-      {filters.length > 0 ? (
-        filters.map((filter, index) => (
-          <FilterItem key={index} filter={filter} />
-        ))
-      ) : (
-        <p>No filters available.</p>
-      )}
+    <div>
+      <h2>Saved Filters</h2>
+      {filters.map((filter, index) => (
+        <div key={filter.id}>
+          <h3>Filter {index + 1}</h3>
+          {filter.criteriaList.map((criteria, i) => (
+            <p key={i}>{criteria.type} - {criteria.condition} - {criteria.value}</p>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
