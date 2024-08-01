@@ -1,0 +1,44 @@
+.filter-list-container {
+    position: relative;
+  }
+  
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .dialog-container {
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .filter-dashboard {
+    margin-top: 20px;
+  }
+  
+  .filter-card {
+    border: 1px solid #ddd;
+  }
+  
+  .criteria-container {
+    margin-bottom: 10px;
+  }
+  
+  .criteria-text {
+    margin: 0;
+  }
+
+  

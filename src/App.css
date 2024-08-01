@@ -1,10 +1,10 @@
-.app {
+.filter-list-container {
   font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
 }
 
-.app-header {
+.header {
   margin-bottom: 20px;
 }
 
@@ -15,37 +15,37 @@
   cursor: pointer;
 }
 
-.filter-list {
-  text-align: left;
-  margin: 0 auto;
-  max-width: 600px;
-}
-
-.filter-item {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-.criteria-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.criteria-item select, .criteria-item input, .criteria-item button {
-  margin-right: 10px;
-}
-
-.filter-form {
+.subheader {
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.criteria-section {
+.filter-dashboard {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-card {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.filter-card-header {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.criteria-container {
+  margin: 10px 0;
+}
+
+.criteria-text {
+  margin: 5px 0;
+  word-break: break-word;
 }

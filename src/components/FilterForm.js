@@ -1,6 +1,7 @@
-// src/components/FilterForm.js
-import axios from 'axios';
 import React, { useState } from 'react';
+import axios from 'axios';
+import { TextField, MenuItem, Button, Grid, IconButton, Box } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -15,9 +16,9 @@ const FilterForm = ({ addFilter }) => {
   };
 
   const handleCriteriaChange = (index, field, value) => {
-    const newCriteriaList = criteria.map((c, i) => (
+    const newCriteriaList = criteria.map((c, i) =>
       i === index ? { ...c, [field]: value } : c
-    ));
+    );
     setCriteria(newCriteriaList);
   };
 
@@ -58,71 +59,131 @@ const FilterForm = ({ addFilter }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input 
-        type="text" 
-        placeholder="Filter Name" 
-        value={name} 
-        onChange={(e) => setName(e.target.value)} 
-        required 
+    <form id="filter-form" onSubmit={handleSubmit}>
+      <TextField
+        label="Filter Name"
+        variant="outlined"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        fullWidth
+        margin="normal"
       />
       {criteria.map((c, index) => (
-        <div key={index} className="criteria-item">
-          <select value={c.type} onChange={(e) => handleCriteriaChange(index, 'type', e.target.value)}>
-            <option value="Amount">Amount</option>
-            <option value="Title">Title</option>
-            <option value="Date">Date</option>
-          </select>
+        <Grid container spacing={2} key={index} alignItems="center" marginBottom={2}>
+          <Grid item xs={4}>
+            <TextField
+              select
+              label="Type"
+              value={c.type}
+              onChange={(e) => handleCriteriaChange(index, 'type', e.target.value)}
+              fullWidth
+              variant="outlined"
+            >
+              <MenuItem value="Amount">Amount</MenuItem>
+              <MenuItem value="Title">Title</MenuItem>
+              <MenuItem value="Date">Date</MenuItem>
+            </TextField>
+          </Grid>
           {c.type === 'Amount' && (
             <>
-              <select value={c.condition} onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}>
-                <option value="More">More</option>
-                <option value="Less">Less</option>
-                <option value="Equal">Equal</option>
-              </select>
-              <input 
-                type="number" 
-                value={c.value} 
-                onChange={(e) => handleCriteriaChange(index, 'value', e.target.value)} 
-                required 
-              />
+              <Grid item xs={4}>
+                <TextField
+                  select
+                  label="Condition"
+                  value={c.condition}
+                  onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                >
+                  <MenuItem value="More">More</MenuItem>
+                  <MenuItem value="Less">Less</MenuItem>
+                  <MenuItem value="Equal">Equal</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  type="number"
+                  label="Value"
+                  value={c.value}
+                  onChange={(e) => handleCriteriaChange(index, 'value', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
             </>
           )}
           {c.type === 'Title' && (
             <>
-              <select value={c.condition} onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}>
-                <option value="Contains">Contains</option>
-                <option value="StartsWith">Starts With</option>
-                <option value="EndsWith">Ends With</option>
-              </select>
-              <input 
-                type="text" 
-                value={c.value} 
-                onChange={(e) => handleCriteriaChange(index, 'value', e.target.value)} 
-                required 
-              />
+              <Grid item xs={4}>
+                <TextField
+                  select
+                  label="Condition"
+                  value={c.condition}
+                  onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                >
+                  <MenuItem value="Contains">Contains</MenuItem>
+                  <MenuItem value="StartsWith">Starts With</MenuItem>
+                  <MenuItem value="EndsWith">Ends With</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={8}>
+                <TextField
+                  type="text"
+                  label="Value"
+                  value={c.value}
+                  onChange={(e) => handleCriteriaChange(index, 'value', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
             </>
           )}
           {c.type === 'Date' && (
             <>
-              <select value={c.condition} onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}>
-                <option value="Before">Before</option>
-                <option value="After">After</option>
-                <option value="On">On</option>
-              </select>
-              <DatePicker 
-                selected={c.value instanceof Date ? c.value : null} 
-                onChange={(date) => handleCriteriaChange(index, 'value', date)} 
-                dateFormat="yyyy/MM/dd"
-                required
-              />
+              <Grid item xs={4}>
+                <TextField
+                  select
+                  label="Condition"
+                  value={c.condition}
+                  onChange={(e) => handleCriteriaChange(index, 'condition', e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                >
+                  <MenuItem value="Before">Before</MenuItem>
+                  <MenuItem value="After">After</MenuItem>
+                  <MenuItem value="On">On</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={8}>
+                <DatePicker
+                  selected={c.value instanceof Date ? c.value : null}
+                  onChange={(date) => handleCriteriaChange(index, 'value', date)}
+                  dateFormat="yyyy/MM/dd"
+                  className="date-picker"
+                  placeholderText="Select Date"
+                />
+              </Grid>
             </>
           )}
-          <button type="button" onClick={() => handleRemoveCriteria(index)}>-</button>
-        </div>
+          <Grid item xs={12} container justifyContent="flex-end">
+            <IconButton
+              color="error"
+              onClick={() => handleRemoveCriteria(index)}
+              style={{ marginTop: '8px' }} // Add top margin for spacing
+            >
+              <DeleteIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        </Grid>
       ))}
-      <button type="button" onClick={handleAddCriteria}>+ Add Criteria</button>
-      <button type="submit">Submit Filter</button>
+      <Box marginY={2} textAlign="center">
+        <Button variant="contained" color="primary" onClick={handleAddCriteria}>
+          + Add Criteria
+        </Button>
+      </Box>
     </form>
   );
 };
